@@ -284,11 +284,11 @@ class BookRecommendationHandler(BaseHTTPRequestHandler):
             for book in BOOKS
         )
         return f"""<!doctype html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Book Recommendation App</title>
+  <title>Kitap Oneri Uygulamasi</title>
   <style>
     :root {{
       --bg: #f6f7f2;
@@ -440,45 +440,46 @@ class BookRecommendationHandler(BaseHTTPRequestHandler):
 </head>
 <body>
   <header>
-    <h1>Book Recommendation App</h1>
+    <h1>Kitap Oneri Uygulamasi</h1>
+    <p>Recommendation Systems konusu icin hazirlanan basit bir content-based filtering uygulamasi.</p>
   </header>
 
   <main>
     <section class="panel controls">
       <label>
-        Search by title, author, genre or keyword
-        <input id="searchInput" type="search" placeholder="e.g.: python, fantasy, Orwell">
+        Kitap, yazar, tur veya anahtar kelime ara
+        <input id="searchInput" type="search" placeholder="Orn: python, fantasy, Orwell">
       </label>
       <label>
-        Sort by
+        Siralama
         <select id="sortSelect">
-          <option value="rating">By rating</option>
-          <option value="year">Newest first</option>
-          <option value="title">By title</option>
+          <option value="rating">Puana gore</option>
+          <option value="year">Yeniye gore</option>
+          <option value="title">Basliga gore</option>
         </select>
       </label>
-      <button id="searchButton">Search</button>
+      <button id="searchButton">Ara</button>
     </section>
 
     <section class="panel">
       <label>
-        Select your favorite book
+        Sevdigin kitabi sec
         <select id="favoriteSelect">
           {options}
         </select>
       </label>
-      <button id="recommendButton" style="margin-top: 12px;">Get Recommendations</button>
+      <button id="recommendButton" style="margin-top: 12px;">Oneri Getir</button>
     </section>
 
     <section class="layout">
       <div class="panel">
-        <h2>Book List</h2>
+        <h2>Kitap Listesi</h2>
         <div id="books" class="book-list"></div>
       </div>
       <div class="panel">
-        <h2>Recommended Books</h2>
+        <h2>Onerilen Kitaplar</h2>
         <div id="recommendations" class="book-list">
-          <div class="empty">Select a book and get recommendations.</div>
+          <div class="empty">Bir kitap secip oneri getir.</div>
         </div>
       </div>
     </section>
@@ -492,14 +493,14 @@ class BookRecommendationHandler(BaseHTTPRequestHandler):
     const favoriteSelect = document.querySelector("#favoriteSelect");
 
     function renderBook(book) {{
-      const score = book.score === undefined ? "" : `<span class="score">Similarity score: ${{book.score}}</span>`;
+      const score = book.score === undefined ? "" : `<span class="score">Benzerlik skoru: ${{book.score}}</span>`;
       return `
         <article class="book">
           <strong>${{book.title}}</strong>
           <div class="meta">
-            ${{book.author}} - ${{book.year}} - Rating: ${{book.rating}}<br>
-            Genres: ${{book.genres.join(", ")}}<br>
-            Keywords: ${{book.keywords.join(", ")}}
+            ${{book.author}} - ${{book.year}} - Puan: ${{book.rating}}<br>
+            Turler: ${{book.genres.join(", ")}}<br>
+            Anahtar kelimeler: ${{book.keywords.join(", ")}}
           </div>
           ${{score}}
         </article>
@@ -519,13 +520,13 @@ class BookRecommendationHandler(BaseHTTPRequestHandler):
       }});
       const response = await fetch(`/api/books?${{params}}`);
       const books = await response.json();
-      renderList(booksElement, books, "No results found.");
+      renderList(booksElement, books, "Sonuc bulunamadi.");
     }}
 
     async function loadRecommendations() {{
       const response = await fetch(`/api/recommend?book_id=${{favoriteSelect.value}}`);
       const books = await response.json();
-      renderList(recommendationsElement, books, "No recommendations found for this book.");
+      renderList(recommendationsElement, books, "Bu kitap icin oneri bulunamadi.");
     }}
 
     document.querySelector("#searchButton").addEventListener("click", loadBooks);
@@ -542,8 +543,8 @@ class BookRecommendationHandler(BaseHTTPRequestHandler):
 
 def main():
     server = HTTPServer((HOST, PORT), BookRecommendationHandler)
-    print(f"Book recommendation app running: http://{HOST}:{PORT}")
-    print("Press Ctrl+C to stop")
+    print(f"Kitap oneri uygulamasi calisiyor: http://{HOST}:{PORT}")
+    print("Durdurmak icin Ctrl+C")
     server.serve_forever()
 
 
